@@ -1,0 +1,55 @@
+body {
+  margin: 0;
+}
+
+.banner {
+    background-color: rgb(125, 43, 219);
+    height: 50px;
+    align-items: center;
+    h1 {
+      margin: 0;
+    }
+    .shopping {
+      font-size: 30px;
+    }
+  }
+
+#icon {
+  border: 1px solid black;
+  width: 100%;
+}
+
+#toto {
+  max-width: 700px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#test {
+  display: flex;
+  justify-content: center;
+  margin-top: 150px;
+}
+
+#lien {
+  width: 30%;
+  height: 30%;
+  margin: 10px;
+  text-decoration: none;
+  color: black;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+}
+
+#blocIcon {
+  display: flex;
+  flex-direction: column-reverse;
+  text-align: center;
+}
+
+#price {
+  margin: 0;
+}
