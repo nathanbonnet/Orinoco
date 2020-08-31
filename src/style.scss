@@ -50,6 +50,24 @@ body {
   text-align: center;
 }
 
+#blocInfo {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+}
+
 #price {
   margin: 0;
+  margin-left: 5px;
+}
+
+#icon_produit {
+  border: 1px solid black;
+  width: 40%;
+}
+
+#checkbox {
+  width: 150%;
+  display: flex;
+  justify-content: space-around;
 }

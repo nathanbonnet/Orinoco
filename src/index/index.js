@@ -16,19 +16,25 @@ request.onreadystatechange = function() {
         for (var i in response) {
             let lien = document.createElement("a");
             let blocIcon = document.createElement("div");
+            let blocInfo = document.createElement("div");
             let icon = document.createElement("img");
             let price = document.createElement("p");
+            let name = document.createElement("p");
             icon.src = response[i].imageUrl;
             price.innerHTML = response[i].price + " €";
-            blocIcon.append(price);
+            name.innerHTML = response[i].name + " :";
+            blocInfo.append(price);
+            blocInfo.append(name);
             blocIcon.append(icon);
             lien.append(blocIcon);
+            lien.append(blocInfo);
             bloc.append(lien);
             console.log(response[i]);
             icon.setAttribute("id", "icon");
-            lien.setAttribute("href", "produit.html");
+            lien.setAttribute("href", "produit.html?id=" + response[i]._id);
             lien.setAttribute("id", "lien");
             blocIcon.setAttribute("id", "blocIcon");
+            blocInfo.setAttribute("id", "blocInfo");
             price.setAttribute("id", "price")
         } 
         console.log(response);

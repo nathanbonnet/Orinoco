@@ -62,8 +62,17 @@ var panierConfig = Object.assign({}, config,{
     filename: "panier.bundle.js"
   },
 });
+var confirmationConfig = Object.assign({}, config,{
+  name: "confirmation",
+  entry: "./src/confirmation/confirmation.js",
+  output: {
+    path: path.resolve(__dirname, 'dist/js'),
+    filename: "confirmation.bundle.js"
+  },
+});
+
 
 // Return Array of Configurations
 module.exports = [
-  indexConfig, produitConfig, panierConfig      
+  indexConfig, produitConfig, panierConfig, confirmationConfig      
 ];

@@ -16,4 +16,4 @@ request.open("GET", "http://localhost:3000/api/teddies/" +id);
 request.send();
 
 
-console.log("panier.js");
+console.log("confirmation.js");
