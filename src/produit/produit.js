@@ -4,9 +4,10 @@ import './../style.scss';
 const url = new URL(window.location.href);
 const id = url.searchParams.get("id");
 console.log(id);
+// window.localStorage.clear();
 
 let b = document.body;
-let checkbox = document.getElementById("checkbox");
+let checkbox = document.getElementById("bloc_colors");
 let ajout = document.getElementById("ajout");
 var request = new XMLHttpRequest();
 request.onreadystatechange = function() {
@@ -24,32 +25,32 @@ request.onreadystatechange = function() {
             checkbox.append(check);
             checkbox.append(color);
             color.innerHTML = response.colors[i];
-            check.setAttribute("type", "checkbox");
+            check.setAttribute("type", "radio");
+            check.setAttribute("name", "colors");
+            check.setAttribute("value", response.colors[i]);
         }
         let test = document.createElement("a");
         let button = document.createElement("button");
         ajout.append(test);
         test.append(button);
-        test.setAttribute("href", "panier.html?id=" + response._id);
         button.setAttribute("class", "btn btn-primary");
         button.innerHTML = "ajouter au panier";
+        button.addEventListener('click', (e) => {
+            const panierJSON = localStorage.getItem("panier");
+            let panier = [];
+            if (panierJSON !== null) {
+                panier = JSON.parse(panierJSON);
+            }
+            panier.push({
+                id,
+                color: document.querySelector('#bloc_colors input[name="colors"]:checked').value
+            })
+            localStorage.setItem("panier", JSON.stringify(panier));
+            console.log(e);
+        })
     }
 }
 request.open("GET", "http://localhost:3000/api/teddies/" +id);
 request.send();
-
-
-class panier {
-    constructor(name, price, colors) {
-        this.name = name;
-        this.price = price;
-        this.colors = colors;
-    }
-}
-
-const test = new panier("test", "300", "gris");
-console.log(test);
-
-this.setContacts(contacts)
 
 console.log("produit.js");
