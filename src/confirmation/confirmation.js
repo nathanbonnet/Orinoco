@@ -1,19 +1,39 @@
 import _ from 'lodash';
 import './../style.scss';
 
+
 const url = new URL(window.location.href);
 const id = url.searchParams.get("id");
 console.log(id);
-var request = new XMLHttpRequest();
-request.onreadystatechange = function() {
-    if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
-        var response = JSON.parse(this.responseText);
-        
-        console.log(response);
+function status(response) {
+    if (response.status >= 200 && response.status < 300) {
+        return Promise.resolve(response)
+    } else {
+        return Promise.reject(new Error(response.statusText))
     }
 }
-request.open("GET", "http://localhost:3000/api/teddies/" +id);
-request.send();
+
+function json(response) {
+    return response.json()
+}
+
+fetch('http://localhost:3000/api/teddies/')
+    .then(status)
+    .then(json)
+    .then(function(data) {
+        console.log(data);
+        toto(data);
+    }).catch(function(error) {
+        console.log(error);
+        bloc.innerHTML = '<h1 style="color:red">une erreur est survenue sur le serveur</h1>'
+    })
+;
+
+function toto(response){
+    let tata = document.createElement("p");
+    tata.innerHTML = response.colors;
+    b.append(tata);
+}
 
 
 console.log("confirmation.js");
