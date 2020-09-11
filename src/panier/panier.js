@@ -59,16 +59,38 @@ function toto(teddies){
             let teddy = teddies.find(element => element._id === item.id)
             console.log("teddy", teddy);
             let tata = document.createElement("tr");
-            let toto = document.createElement("tb");
-            let titi = document.createElement("tb");
             b.append(tata);
+            let toto = document.createElement("td");
+            let titi = document.createElement("td");
+            let price = document.createElement("td");
+            let icon = document.createElement("td");
+            let img = document.createElement("img");
+            let ligne_supp = document.createElement("td");
+            let ligne_ajout = document.createElement("td");
+            let supprimer = document.createElement("button");
+            let ajouter = document.createElement("button");
             tata.append(toto);
             tata.append(titi);
-            toto.innerHTML = item.color;
-            titi.innerHTML = item.id;
+            tata.append(price);
+            tata.append(icon);
+            tata.append(ligne_supp);
+            tata.append(ligne_ajout);
+            icon.append(img);
+            ligne_supp.append(supprimer)
+            ligne_ajout.append(ajouter)
+            titi.innerHTML = item.color;
+            toto.innerHTML = teddy.name;
+            price.innerHTML = teddy.price + "€";
+            img.src = teddy.imageUrl;
+            ajouter.innerHTML = "ajouter";
+            supprimer.setAttribute("class", "btn btn-danger");
+            ajouter.setAttribute("class", "btn btn-primary");
+            supprimer.innerHTML = "supprimer";
+            img.setAttribute("class", "col-5")
             tata.setAttribute("class", "border");
             toto.setAttribute("class", "pl-2 pr-2");
             titi.setAttribute("class", "pl-2 pr-2");
+            icon.setAttribute("class", "w-25")
         }
     }
     console.log(panier);
