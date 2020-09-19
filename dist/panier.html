@@ -15,41 +15,35 @@
         </div>
     </header>
     <main class="d-flex flex-column align-items-center">
-        <table id="main">
-            <tr>
+        <table id="main" class="d-flex flex-column align-items-center">
+            <tr class="d-flex">
                 <th>Prenom</th>
                 <th class="pl-2">Couleur</th>
                 <th class="pl-2">Prix</th>
                 <th class="pl-2">Article</th>
             </tr>
         </table>
-        <h2>confirmation de commande</h2>
-        <form class="form-group">
-            <div class="form-example col-6">
-                <label for="name">Entez votre prenom: </label>
-                <input type="text" name="name" id="name" required>
+    </main>
+    <h2 class="text-center">confirmation de commande</h2>
+        <form class="form-group d-flex flex-column align-items-center justify-content-end">
+            <div class="d-flex flex-column align-items-center col-6">
+                <div class="form-example d-flex flex-column">
+                    <label for="name">Entez votre prenom: </label>
+                    <input type="text" name="name" id="name" required>
+                    </div>
+                <div class="form-example d-flex flex-column">
+                    <label for="nom">Entez votre nom: </label>
+                    <input type="text" name="nom" id="nom">
                 </div>
-            <div class="form-example col-6">
-                <label for="nom">Entez votre nom: </label>
-                <input type="text" name="nom" id="nom" required>
-            </div>
-            <div class="form-example col-6">
-                <label for="email">Entez votre e-mail: </label>
-                <input type="email" name="email" id="email" required>
-            </div>
-            <div class="form-example col-6">
-                <label for="adresse">Entez votre adresse: </label>
-                <input type="text" name="adresse" id="adresse" required>
-            </div>
-            <div class="form-example col-6">
-                <label for="ville">Entez votre ville: </label>
-                <input type="text" name="ville" id="ville" required>
-            </div>
-            <div class="form-example col-6">
-                <input type="submit" class="btn btn-primary mt-3" value="acheter">
+                <div class="form-example d-flex flex-column">
+                    <label for="email">Entez votre e-mail: </label>
+                    <input type="email" name="email" id="email">
+                </div>
+                <div class="form-example">
+                    <a id="lien"><button type="button" id="button" class="btn btn-primary mt-3">Acheter</button></a>
+                </div>
             </div>
         </form>
-    </main>
     <footer>
         <div class="d-flex footer banner w-100 justify-content-around">
             <a href="#" class="logo h4 text-decoration-none text-white">Contact</a>

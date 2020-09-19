@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { add } from 'lodash';
 import './../style.scss';
 // const url = new URL(window.location.href);
 // const id = url.searchParams.get("id");
@@ -55,9 +55,19 @@ function toto(teddies){
     let panier = [];
     if (panierJSON !== null) {
         panier = JSON.parse(panierJSON);
+        let total = 0;
+        let prixTotal = document.createElement("p");
+        b.append(prixTotal);
         for (let item of panier) {
             let teddy = teddies.find(element => element._id === item.id)
             console.log("teddy", teddy);
+            function addPrice() {
+                let priceUnitaire = teddy.price;
+                let prixCumule = priceUnitaire * item.quantity;
+                price.innerHTML = prixCumule + "€";
+
+                return prixCumule;
+            }
             let tata = document.createElement("tr");
             b.append(tata);
             let toto = document.createElement("td");
@@ -66,6 +76,7 @@ function toto(teddies){
             let icon = document.createElement("td");
             let img = document.createElement("img");
             let ligne_supp = document.createElement("td");
+            let quantity = document.createElement("td");
             let ligne_ajout = document.createElement("td");
             let supprimer = document.createElement("button");
             let ajouter = document.createElement("button");
@@ -74,26 +85,51 @@ function toto(teddies){
             tata.append(price);
             tata.append(icon);
             tata.append(ligne_supp);
+            tata.append(quantity);
             tata.append(ligne_ajout);
             icon.append(img);
             ligne_supp.append(supprimer)
             ligne_ajout.append(ajouter)
             titi.innerHTML = item.color;
             toto.innerHTML = teddy.name;
+            quantity.innerHTML = item.quantity;
             price.innerHTML = teddy.price + "€";
+            total += teddy.price;
             img.src = teddy.imageUrl;
-            ajouter.innerHTML = "ajouter";
+            ajouter.innerHTML = "+";
+            supprimer.innerHTML = "-";
             supprimer.setAttribute("class", "btn btn-danger");
+            supprimer.setAttribute("click", "test");
             ajouter.setAttribute("class", "btn btn-primary");
-            supprimer.innerHTML = "supprimer";
-            img.setAttribute("class", "col-5")
-            tata.setAttribute("class", "border");
+            supprimer.addEventListener("click", function(){
+                item.quantity -= 1
+                quantity.innerHTML = item.quantity;
+                localStorage.setItem("panier", JSON.stringify(panier));
+                total -= addPrice();
+            });
+            ajouter.addEventListener("click", (e) => {
+                item.quantity += 1
+                quantity.innerHTML = item.quantity;
+                localStorage.setItem("panier", JSON.stringify(panier));
+                total += addPrice();
+                console.log(item);
+            });
+            img.setAttribute("class", "col-12 col-md-5")
+            tata.setAttribute("class", "border d-flex align-items-center justify-content-around");
             toto.setAttribute("class", "pl-2 pr-2");
             titi.setAttribute("class", "pl-2 pr-2");
-            icon.setAttribute("class", "w-25")
+            icon.setAttribute("class", "w-25");
+            quantity.setAttribute("class", "bg-secondary d-flex justify-content-center rounded-circle pt-md-2 pb-md-2 pl-1 pr-1 pl-md-3 pr-md-3");
         }
+        prixTotal.innerHTML = total;
     }
+    document.getElementById("button").addEventListener("click", function(){
+        var input = document.getElementById("name").value;
+        var toto = document.getElementById("email").value;
+        // Afficher la valeur
+        console.log(input);
+        console.log(toto);
+        lien.setAttribute("href", "confirmation.html?name=" +input + "&email="  +toto);
+    });
     console.log(panier);
 }
-
-

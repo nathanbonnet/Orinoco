@@ -6,7 +6,7 @@ const id = url.searchParams.get("id");
 console.log(id);
 // window.localStorage.clear();
 
-let b = document.body;
+let b = document.getElementById("bloc-success");
 let checkbox = document.getElementById("bloc_colors");
 let ajout = document.getElementById("ajout");
 
@@ -22,6 +22,16 @@ function status(response) {
 
 function json(response) {
     return response.json()
+}
+
+function notif(){
+    let bloc = document.createElement("div");
+    let message = document.createElement("p");
+    b.append(bloc);
+    bloc.append(message);
+    bloc.setAttribute("class", "alert bg-success position-absolute notification col-2");
+    message.setAttribute("class", "text-white")
+    message.innerHTML = "le produit à bien été ajouté au panier";
 }
 
 fetch('http://localhost:3000/api/teddies/' +id)
@@ -59,12 +69,23 @@ function toto(response){
     button.setAttribute("class", "btn btn-primary");
     button.innerHTML = "ajouter au panier";
     button.addEventListener('click', (e) => {
+        notif();
         const panierJSON = localStorage.getItem("panier");
         let panier = [];
         if (panierJSON !== null) {
             panier = JSON.parse(panierJSON);
         }
-        panier.push({
+        function addToCart(product){
+            let cartProduct = panier.find(element => element.id === product.id && element.color === product.color);
+            if(cartProduct === undefined) {
+                let newProduct = product;
+                newProduct.quantity = 1;
+                panier.push(product)
+            }else {
+                cartProduct.quantity += 1
+            }
+        }
+        addToCart({
             id,
             color: document.querySelector('#bloc_colors input[name="colors"]:checked').value
         })

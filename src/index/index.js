@@ -3,6 +3,7 @@ import './../style.scss';
 let b = document.body;
 let bloc = document.createElement("div");
 bloc.setAttribute("id", "toto");
+bloc.setAttribute("class", "d-flex justify-content-center")
 b.append(bloc);
 
 let test = document.getElementById("test");
