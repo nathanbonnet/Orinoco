@@ -1,3 +1,5 @@
+
+
 import _, { add } from 'lodash';
 import './../style.scss';
 // const url = new URL(window.location.href);
@@ -28,6 +30,108 @@ import './../style.scss';
 
 console.log("panier.js");
 let b = document.getElementById("main")
+
+fetch('http://localhost:3000/api/teddies/')
+    .then(status)
+    .then(json)
+    .then(function(data) {
+        element(data);
+    }).catch(function(error) {
+        console.log(error);
+    })
+;
+
+function element(teddies){
+    const panierJSON = localStorage.getItem("panier");
+    let panier = [];
+    if (panierJSON !== null) {
+        panier = JSON.parse(panierJSON);
+        let total = 0;
+        let prixTotal = document.createElement("p");
+        prixTotal.id = "totalPrice";
+        b.append(prixTotal);
+        for (let item of panier) {
+            let teddy = teddies.find(element => element._id === item.id)
+            console.log("teddy", teddy);
+            function addPrice() {
+                let priceUnitaire = teddy.price;
+                let prixCumule = priceUnitaire * item.quantity;
+                tableau_price.innerHTML = prixCumule + "€";
+
+                return prixCumule;
+            }
+            let tableau = document.createElement("tr");
+            b.append(tableau);
+            let tableau_name = document.createElement("td");
+            let tableau_color = document.createElement("td");
+            let tableau_price = document.createElement("td");
+            let bloc_tableau_img = document.createElement("td");
+            let tableau_img = document.createElement("img");
+            let bloc_tableau_supprimer = document.createElement("td");
+            let tableau_quantite = document.createElement("td");
+            let bloc_tableau_ajouter = document.createElement("td");
+            let button_supprimer = document.createElement("button");
+            let button_ajouter = document.createElement("button");
+            tableau.append(tableau_name);
+            tableau.append(tableau_color);
+            tableau.append(tableau_price);
+            tableau.append(bloc_tableau_img);
+            tableau.append(bloc_tableau_supprimer);
+            tableau.append(tableau_quantite);
+            tableau.append(bloc_tableau_ajouter);
+            bloc_tableau_img.append(tableau_img);
+            bloc_tableau_supprimer.append(button_supprimer)
+            bloc_tableau_ajouter.append(button_ajouter)
+            tableau_color.innerHTML = item.color;
+            tableau_name.innerHTML = teddy.name;
+            tableau_quantite.innerHTML = item.quantity;
+            tableau_price.innerHTML = teddy.price + "€";
+            total += teddy.price;
+            tableau_img.src = teddy.imageUrl;
+            button_ajouter.innerHTML = "+";
+            button_supprimer.innerHTML = "-";
+            button_supprimer.setAttribute("class", "btn btn-danger");
+            button_supprimer.setAttribute("click", "test");
+            button_ajouter.setAttribute("class", "btn btn-primary");
+            button_supprimer.addEventListener("click", function(){
+                item.quantity -= 1
+                tableau_quantite.innerHTML = item.quantity;
+                localStorage.setItem("panier", JSON.stringify(panier));
+                total -= addPrice();
+                document.getElementById("totalPrice").textContent = total;
+            });
+            button_ajouter.addEventListener("click", (e) => {
+                item.quantity += 1
+                tableau_quantite.innerHTML = item.quantity;
+                localStorage.setItem("panier", JSON.stringify(panier));
+                total += addPrice();
+                document.getElementById("totalPrice").textContent = total;
+                console.log(item);
+            });
+            bloc_tableau_img.setAttribute("class", "col-12 col-md-5")
+            tableau.setAttribute("class", "border d-flex align-items-center justify-content-around");
+            tableau_name.setAttribute("class", "pl-2 pr-2");
+            tableau_color.setAttribute("class", "pl-2 pr-2");
+            tableau_img.setAttribute("class", "w-25");
+            tableau_quantite.setAttribute("class", "bg-secondary d-flex justify-content-center rounded-circle pt-md-2 pb-md-2 pl-1 pr-1 pl-md-3 pr-md-3");
+        }
+        prixTotal.innerHTML = "prix total: " +total+ "€";
+    }
+    acheter();
+    console.log(panier);
+}
+
+function acheter(){
+    document.getElementById("button").addEventListener("click", function(){
+        var input = document.getElementById("name").value;
+        var toto = document.getElementById("email").value;
+        // Afficher la valeur
+        console.log(input);
+        console.log(toto);
+        lien.setAttribute("href", "confirmation.html?name=" +input + "&email="  +toto);
+    });
+}
+
 function status(response) {
     if (response.status >= 200 && response.status < 300) {
         return Promise.resolve(response)
@@ -38,98 +142,4 @@ function status(response) {
 
 function json(response) {
     return response.json()
-}
-
-fetch('http://localhost:3000/api/teddies/')
-    .then(status)
-    .then(json)
-    .then(function(data) {
-        toto(data);
-    }).catch(function(error) {
-        console.log(error);
-    })
-;
-
-function toto(teddies){
-    const panierJSON = localStorage.getItem("panier");
-    let panier = [];
-    if (panierJSON !== null) {
-        panier = JSON.parse(panierJSON);
-        let total = 0;
-        let prixTotal = document.createElement("p");
-        b.append(prixTotal);
-        for (let item of panier) {
-            let teddy = teddies.find(element => element._id === item.id)
-            console.log("teddy", teddy);
-            function addPrice() {
-                let priceUnitaire = teddy.price;
-                let prixCumule = priceUnitaire * item.quantity;
-                price.innerHTML = prixCumule + "€";
-
-                return prixCumule;
-            }
-            let tata = document.createElement("tr");
-            b.append(tata);
-            let toto = document.createElement("td");
-            let titi = document.createElement("td");
-            let price = document.createElement("td");
-            let icon = document.createElement("td");
-            let img = document.createElement("img");
-            let ligne_supp = document.createElement("td");
-            let quantity = document.createElement("td");
-            let ligne_ajout = document.createElement("td");
-            let supprimer = document.createElement("button");
-            let ajouter = document.createElement("button");
-            tata.append(toto);
-            tata.append(titi);
-            tata.append(price);
-            tata.append(icon);
-            tata.append(ligne_supp);
-            tata.append(quantity);
-            tata.append(ligne_ajout);
-            icon.append(img);
-            ligne_supp.append(supprimer)
-            ligne_ajout.append(ajouter)
-            titi.innerHTML = item.color;
-            toto.innerHTML = teddy.name;
-            quantity.innerHTML = item.quantity;
-            price.innerHTML = teddy.price + "€";
-            total += teddy.price;
-            img.src = teddy.imageUrl;
-            ajouter.innerHTML = "+";
-            supprimer.innerHTML = "-";
-            supprimer.setAttribute("class", "btn btn-danger");
-            supprimer.setAttribute("click", "test");
-            ajouter.setAttribute("class", "btn btn-primary");
-            supprimer.addEventListener("click", function(){
-                item.quantity -= 1
-                quantity.innerHTML = item.quantity;
-                localStorage.setItem("panier", JSON.stringify(panier));
-                total -= addPrice();
-            });
-            ajouter.addEventListener("click", (e) => {
-                item.quantity += 1
-                quantity.innerHTML = item.quantity;
-                localStorage.setItem("panier", JSON.stringify(panier));
-                total += addPrice();
-                console.log(item);
-            });
-            img.setAttribute("class", "col-12 col-md-5")
-            tata.setAttribute("class", "border d-flex align-items-center justify-content-around");
-            toto.setAttribute("class", "pl-2 pr-2");
-            titi.setAttribute("class", "pl-2 pr-2");
-            icon.setAttribute("class", "w-25");
-            quantity.setAttribute("class", "bg-secondary d-flex justify-content-center rounded-circle pt-md-2 pb-md-2 pl-1 pr-1 pl-md-3 pr-md-3");
-        }
-        prixTotal.innerHTML = total;
-    }
-    document.getElementById("button").addEventListener("click", function(){
-        var input = document.getElementById("name").value;
-        var toto = document.getElementById("email").value;
-        // Afficher la valeur
-        console.log(input);
-        console.log(toto);
-        lien.setAttribute("href", "confirmation.html?name=" +input + "&email="  +toto);
-    });
-    console.log(panier);
 }

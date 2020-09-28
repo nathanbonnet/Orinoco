@@ -1,51 +1,31 @@
 import _ from 'lodash';
 import './../style.scss';
 
+//permet de recuperer les information passé dans l'url
 const url = new URL(window.location.href);
 const id = url.searchParams.get("id");
 console.log(id);
+
 // window.localStorage.clear();
 
-let b = document.getElementById("bloc-success");
-let checkbox = document.getElementById("bloc_colors");
-let ajout = document.getElementById("ajout");
+let blocNotif = document.getElementById("bloc-notif");
+let checkbox = document.getElementById("checkbox-colors");
+let ajout = document.getElementById("bloc-right");
 
 console.log("produit.js");
-
-function status(response) {
-    if (response.status >= 200 && response.status < 300) {
-        return Promise.resolve(response)
-    } else {
-        return Promise.reject(new Error(response.statusText))
-    }
-}
-
-function json(response) {
-    return response.json()
-}
-
-function notif(){
-    let bloc = document.createElement("div");
-    let message = document.createElement("p");
-    b.append(bloc);
-    bloc.append(message);
-    bloc.setAttribute("class", "alert bg-success position-absolute notification col-2");
-    message.setAttribute("class", "text-white")
-    message.innerHTML = "le produit à bien été ajouté au panier";
-}
 
 fetch('http://localhost:3000/api/teddies/' +id)
     .then(status)
     .then(json)
     .then(function(data) {
         console.log(data);
-        toto(data);
+        element(data);
     }).catch(function(error) {
         console.log(error);
     })
 ;
 
-function toto(response){
+function element(response){
     let icon = document.getElementById("icon");
     let price = document.getElementById("price");
     price.innerHTML = response.price + " €";
@@ -69,7 +49,6 @@ function toto(response){
     button.setAttribute("class", "btn btn-primary");
     button.innerHTML = "ajouter au panier";
     button.addEventListener('click', (e) => {
-        notif();
         const panierJSON = localStorage.getItem("panier");
         let panier = [];
         if (panierJSON !== null) {
@@ -77,19 +56,48 @@ function toto(response){
         }
         function addToCart(product){
             let cartProduct = panier.find(element => element.id === product.id && element.color === product.color);
-            if(cartProduct === undefined) {
+            if(cartProduct === undefined) {
                 let newProduct = product;
                 newProduct.quantity = 1;
                 panier.push(product)
-            }else {
+            }else {
                 cartProduct.quantity += 1
             }
+            notif();
         }
         addToCart({
             id,
-            color: document.querySelector('#bloc_colors input[name="colors"]:checked').value
+            color: document.querySelector('#checkbox-colors input[name="colors"]:checked').value
         })
         localStorage.setItem("panier", JSON.stringify(panier));
         console.log(e);
     })
+}
+
+function status(response) {
+    if (response.status >= 200 && response.status < 300) {
+        return Promise.resolve(response)
+    } else {
+        return Promise.reject(new Error(response.statusText))
+    }
+}
+
+function json(response) {
+    return response.json()
+}
+
+function notif(){
+    let bloc = document.createElement("div");
+    bloc.id = "my-notif";
+    let message = document.createElement("p");
+    blocNotif.append(bloc);
+    bloc.append(message);
+    bloc.setAttribute("class", "alert bg-success position-absolute notification col-3");
+    message.setAttribute("class", "text-white")
+    message.innerHTML = "le produit à bien été ajouté au panier";
+    setTimeout(deleteNotif, 2000);
+}
+
+function deleteNotif(){
+        blocNotif.innerHTML = "";
 }

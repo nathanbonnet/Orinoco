@@ -25,7 +25,7 @@ body {
   flex-wrap: wrap;
 }
 
-#test {
+#bloc-element {
   display: flex;
   justify-content: center;
   margin-top: 150px;
@@ -74,4 +74,5 @@ body {
 
 .notification {
   right: 0;
+  height: 45px;
 }
