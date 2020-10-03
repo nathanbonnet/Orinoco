@@ -14,8 +14,8 @@
             <a href="panier.html"><i class="fas fa-shopping-basket shopping text-white"></i></a>
         </div>
     </header>
-    <main class="d-flex flex-column align-items-center">
-        <table id="main" class="d-flex flex-column align-items-center">
+    <main class="d-flex flex-column align-items-center" id="tableau-produit">
+        <table id="tablePanier" class="d-flex flex-column align-items-center">
             <tr class="d-flex">
                 <th>Prenom</th>
                 <th class="pl-2">Couleur</th>
@@ -25,25 +25,33 @@
         </table>
     </main>
     <h2 class="text-center">confirmation de commande</h2>
-        <form class="form-group d-flex flex-column align-items-center justify-content-end">
-            <div class="d-flex flex-column align-items-center col-6">
-                <div class="form-example d-flex flex-column">
-                    <label for="name">Entez votre prenom: </label>
-                    <input type="text" name="name" id="name" required>
-                    </div>
-                <div class="form-example d-flex flex-column">
-                    <label for="nom">Entez votre nom: </label>
-                    <input type="text" name="nom" id="nom">
+    <form class="form-group d-flex flex-column align-items-center justify-content-end mb-5">
+        <div class="d-flex flex-column align-items-center col-6">
+            <div class="form-example d-flex flex-column">
+                <label for="name">Entez votre prenom: </label>
+                <input type="text" name="name" id="name" required>
                 </div>
-                <div class="form-example d-flex flex-column">
-                    <label for="email">Entez votre e-mail: </label>
-                    <input type="email" name="email" id="email">
-                </div>
-                <div class="form-example">
-                    <a id="lien"><button type="button" id="button" class="btn btn-primary mt-3">Acheter</button></a>
-                </div>
+            <div class="form-example d-flex flex-column">
+                <label for="nom">Entez votre nom: </label>
+                <input type="text" name="nom" id="nom">
             </div>
-        </form>
+            <div class="form-example d-flex flex-column">
+                <label for="email">Entez votre adresse: </label>
+                <input type="email" name="adresse" id="adresse">
+            </div>
+            <div class="form-example d-flex flex-column">
+                <label for="email">Entez votre ville: </label>
+                <input type="email" name="ville" id="ville">
+            </div>
+            <div class="form-example d-flex flex-column">
+                <label for="email">Entez votre e-mail: </label>
+                <input type="email" name="email" id="email">
+            </div>
+            <div class="form-example">
+                <a id="lien"><button type="button" id="button" class="btn btn-primary mt-3 mb-3">Acheter</button></a>
+            </div>
+        </div>
+    </form>
     <footer>
         <div class="d-flex footer banner w-100 justify-content-around">
             <a href="#" class="logo h4 text-decoration-none text-white">Contact</a>
@@ -52,3 +60,4 @@
     </footer>
     <script src="./js/panier.bundle.js"></script>
 </body>
+</html>

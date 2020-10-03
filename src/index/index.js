@@ -2,27 +2,27 @@ import _ from 'lodash';
 import './../style.scss';
 
 let body = document.body;
-let bloc = document.createElement("div");
-bloc.setAttribute("id", "toto");
-bloc.setAttribute("class", "d-flex justify-content-center")
-body.append(bloc);
+let bloc_article = document.createElement("div");
+bloc_article.setAttribute("id", "bloc-article");
+bloc_article.setAttribute("class", "d-flex justify-content-center")
+body.append(bloc_article);
 
 let blocElement = document.getElementById("bloc-element");
-blocElement.append(bloc)
+blocElement.append(bloc_article)
 
 fetch('http://localhost:3000/api/teddies/')
     .then(status)
     .then(json)
     .then(function(data) {
         console.log(data);
-        element(data);
+        affichageHome(data);
     }).catch(function(error) {
         console.log(error);
         bloc.innerHTML = '<h1 style="color:red">une erreur est survenue sur le serveur</h1>'
     })
 ;
 
-function element(response) {
+function affichageHome(response) {
     for (var i in response) {
         let lienDuProduit = document.createElement("a");
         let blocImage = document.createElement("div");
@@ -38,7 +38,7 @@ function element(response) {
         blocImage.append(image);
         lienDuProduit.append(blocImage);
         lienDuProduit.append(blocInfoProduit);
-        bloc.append(lienDuProduit);
+        bloc_article.append(lienDuProduit);
         console.log(response[i]);
         image.setAttribute("id", "icon");
         lienDuProduit.setAttribute("href", "produit.html?id=" + response[i]._id);
