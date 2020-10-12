@@ -6,20 +6,20 @@ import './../style.scss';
 let storagePrice = JSON.parse(localStorage.getItem("price"))
 let price = storagePrice ? storagePrice : [];
 
-
 let tableau_produit = document.getElementById("tableau-produit");
 console.log("panier.js");
 let storage = JSON.parse(localStorage.getItem("panier"))
 let panier = storage ? storage : [];
+let listeProduits = [];
 fetch('http://localhost:3000/api/teddies/')
     .then(response => response.json())
     .then(teddies => {
+        listeProduits = teddies;
         displayCart(teddies);
     }).catch(function(error) {
         console.log(error);
     })
 ;
-
 
 function displayCart(teddies) {
     let total = 0;
@@ -53,7 +53,7 @@ function displayLine(teddy, target) {
             <td id="tableau-price">
                 ${teddy.price}€
             </td>
-            <td id="tableau-price-total_${teddy._id}">
+            <td id="tableau-price-total_${teddy._id}_${teddy.selectedColor}">
                 ${teddy.price * teddy.quantity}€
             </td>
             <td class="col-3 col-md-1 d-flex justify-content-center">
@@ -64,7 +64,7 @@ function displayLine(teddy, target) {
                     -
                 </button>
             </td>
-            <td id="teddy_${teddy._id}" class="bg-secondary d-flex justify-content-center rounded-circle pt-md-2 pb-md-2 pl-1 pr-1 pl-md-3 pr-md-3">
+            <td id="teddy_${teddy._id}_${teddy.selectedColor}" class="bg-secondary d-flex justify-content-center rounded-circle pt-md-2 pb-md-2 pl-1 pr-1 pl-md-3 pr-md-3">
                 ${teddy.quantity}
             </td>
             <td>
@@ -86,23 +86,21 @@ function addPrice(teddies) {
     return prixCumule;
 }
 
-function addListeners() {
+function addListeners(teddies) {
+    console.log(teddies);
     console.log(document.querySelectorAll(".bouton-ajouter"));
-    let price = 0;
     [].forEach.call(document.querySelectorAll(".bouton-ajouter"), function(el) {
         console.log(el)
         el.addEventListener('click', function() {
-            console.log(el.dataset.targetPrice)
+            console.log(el.dataset.targetColor)
             addItem(el.dataset.targetId, el.dataset.targetColor, parseInt(el.dataset.targetPrice))
-            price += parseInt(el.dataset.targetPrice);
-            console.log(price)
         })
     }),
     [].forEach.call(document.querySelectorAll(".bouton-supprimer"), function(el) {
         console.log(el)
-        el.addEventListener('click', function() {
+        el.addEventListener('click', function(event) {
             console.log("button_ajouter")
-            deleteItem(el.dataset.targetId, el.dataset.targetColor)
+            deleteItem(el.dataset.targetId, el.dataset.targetColor, parseInt(el.dataset.targetPrice), event)
             price -= parseInt(el.dataset.targetPrice);
             console.log(price)
         })
@@ -141,7 +139,7 @@ function acheter(){
         .then(response => response.json())
         .then(elt => {
             console.log(elt)
-            localStorage.setItem("toto", JSON.stringify(elt.orderId));
+            localStorage.setItem("teddy.price", JSON.stringify(elt.orderId));
             // window.location.replace("confirmation.html");
         }).catch(function(error) {
             console.log(error);
@@ -149,28 +147,29 @@ function acheter(){
     });
 }
 
-function addItem(id, color, price) {
+function addItem(id, color, prix) {
     let item = panier.find(elt => elt.id === id && elt.color === color);
-    // console.log(item)
-    // console.log(panier, id)
-    console.log(panier);
     item.quantity += 1;
-
-    document.getElementById("tableau-price-total_" + id).innerHTML= item.quantity * price;
-    document.getElementById("teddy_" +id).innerHTML = item.quantity;
+    console.log(id, color);
+    document.getElementById("teddy_" +id+"_"+color).innerHTML = item.quantity;
+    document.getElementById("tableau-price-total_" +id+"_"+color).innerHTML= item.quantity * prix + "€";
     localStorage.setItem("panier", JSON.stringify(panier));
-    // console.log(item);
 }
 
-function deleteItem(id, color) {
+function deleteItem(id, color, prix, event) {
     let item = panier.find(elt => elt.id === id && elt.color === color)
     console.log(item)
-    console.log(panier, id)
+    console.log(panier, id, price)
     item.quantity -= 1;
     if (item.quantity <= 0) {
         item.quantity = 0;
+        let itemIndex = panier.indexOf(element => element.id === id && element.color === color);
+        panier.splice(itemIndex, 1);
+        event.target.parentNode.parentNode.parentNode.parentNode.innerHTML = "";
+        displayCart(listeProduits);
     }
     console.log(panier);
-    document.getElementById("teddy_" +id).innerHTML = item.quantity;
+    document.getElementById("tableau-price-total_" + id+"_"+color).innerHTML= item.quantity * prix + "€";
+    document.getElementById("teddy_" +id+"_"+color).innerHTML = item.quantity;
     localStorage.setItem("panier", JSON.stringify(panier));
 }
