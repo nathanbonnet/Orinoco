@@ -6,8 +6,9 @@ import './../style.scss';
 let storagePrice = JSON.parse(localStorage.getItem("price"))
 let price = storagePrice ? storagePrice : [];
 
+let prix_total = document.createElement("p");
 let tableau_produit = document.getElementById("tableau-produit");
-console.log("panier.js");
+tableau_produit.append(prix_total);
 let storage = JSON.parse(localStorage.getItem("panier"))
 let panier = storage ? storage : [];
 let listeProduits = [];
@@ -24,19 +25,20 @@ fetch('http://localhost:3000/api/teddies/')
 function displayCart(teddies) {
     let total = 0;
     for (let item of panier) {
-        console.log(item.id);
         let teddy = teddies.find(element => element._id === item.id)
         teddy.quantity = item.quantity;
         teddy.selectedColor = item.color;
         displayLine(teddy, "tablePanier");
-        total += teddy.price;
+        total += teddy.price * teddy.quantity;
     };
-    let prix_total = document.createElement("p");
-    tableau_produit.append(prix_total);
-    prix_total.innerHTML = "prix total: " +total+ "€"
-    localStorage.setItem("price", JSON.stringify(total));
     addListeners(teddies);
     acheter();
+    prixTotal(total)
+}
+
+function prixTotal(total) {
+    prix_total.innerHTML = "prix total: " +total+ "€";
+    localStorage.setItem("price", JSON.stringify(total));
 }
 
 
@@ -76,49 +78,70 @@ function displayLine(teddy, target) {
     document.getElementById(target).innerHTML += Line;
 }
 
-function addPrice(teddies) {
-    let teddy = teddies.map(elt => elt.price);
-    console.log(teddies)
-    let priceUnitaire = teddy.price;
-    let prixCumule = priceUnitaire * item.quantity;
-    price.innerHTML = prixCumule + "€";
-
-    return prixCumule;
-}
-
 function addListeners(teddies) {
-    console.log(teddies);
-    console.log(document.querySelectorAll(".bouton-ajouter"));
     [].forEach.call(document.querySelectorAll(".bouton-ajouter"), function(el) {
-        console.log(el)
         el.addEventListener('click', function() {
             console.log(el.dataset.targetColor)
             addItem(el.dataset.targetId, el.dataset.targetColor, parseInt(el.dataset.targetPrice))
         })
     }),
     [].forEach.call(document.querySelectorAll(".bouton-supprimer"), function(el) {
-        console.log(el)
         el.addEventListener('click', function(event) {
-            console.log("button_ajouter")
             deleteItem(el.dataset.targetId, el.dataset.targetColor, parseInt(el.dataset.targetPrice), event)
             price -= parseInt(el.dataset.targetPrice);
-            console.log(price)
         })
     })
 }
 
 function acheter(){
-    document.getElementById("button").addEventListener("click", function(){
+    document.getElementById("button").addEventListener("click", function(event){
+       let errorName = document.getElementById("errorName");
+       let errorNom = document.getElementById("errorNom");
+       let errorAdresse = document.getElementById("errorAdresse");
+       let errorVille = document.getElementById("errorVille");
+       let errorEmail = document.getElementById("errorEmail");
+       let verificationEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        event.preventDefault();
         var inputName = document.getElementById("name").value;
+        if(inputName == "") {
+            errorName.innerHTML = "le champs est vide"
+            errorName.setAttribute("class", "btn btn-danger")
+        }else {
+            errorName.innerHTML = ""
+            errorName.setAttribute("class", "")
+        }
         var inputNom = document.getElementById("nom").value;
+        if(inputNom == "") {
+            errorNom.innerHTML = "le champs est vide"
+            errorNom.setAttribute("class", "btn btn-danger")
+        }else {
+            errorNom.innerHTML = ""
+            errorNom.setAttribute("class", "")
+        }
         var inputAdresse = document.getElementById("adresse").value;
+        if(inputAdresse == "") {
+            errorAdresse.innerHTML = "le champs est vide"
+            errorAdresse.setAttribute("class", "btn btn-danger")
+        }else {
+            errorAdresse.innerHTML = ""
+            errorAdresse.setAttribute("class", "")
+        }
         var inputVille = document.getElementById("ville").value;
+        if(inputVille == "") {
+            errorVille.innerHTML = "le champs est vide"
+            errorVille.setAttribute("class", "btn btn-danger")
+        }else {
+            errorVille.innerHTML = ""
+            errorVille.setAttribute("class", "")
+        }
         var inputEmail = document.getElementById("email").value;
-        // Afficher la valeur
-        console.log(inputNom);
-        console.log(inputEmail);
-
-        console.log(panier)
+        if(inputEmail == "") {
+            errorEmail.innerHTML = "le champs est vide"
+            errorEmail.setAttribute("class", "btn btn-danger")
+        }else if (inputEmail != verificationEmail) {
+            errorEmail.innerHTML = "Adresse e-mail non valide"
+            errorEmail.setAttribute("class", "btn btn-warning")
+        }
 
         let contact = {
                 firstName: inputName,
@@ -132,17 +155,17 @@ function acheter(){
         let products = panier.map(elt => elt.id);
 
         fetch('http://localhost:3000/api/teddies/order', {
-        method: "POST",
-        body: JSON.stringify({contact, products}),
-        headers: {"Content-type": "application/json; charset=UTF-8"}
-        })
-        .then(response => response.json())
-        .then(elt => {
-            console.log(elt)
-            localStorage.setItem("teddy.price", JSON.stringify(elt.orderId));
-            // window.location.replace("confirmation.html");
-        }).catch(function(error) {
-            console.log(error);
+            method: "POST",
+            body: JSON.stringify({contact, products}),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+            })
+            .then(response => response.json())
+            .then(elt => {
+                console.log(elt, "test")
+                localStorage.setItem("toto", JSON.stringify(elt.orderId));
+                // window.location.replace("confirmation.html");
+            }).catch(function(error) {
+                console.log(error.response);
         });
     });
 }
@@ -154,6 +177,8 @@ function addItem(id, color, prix) {
     document.getElementById("teddy_" +id+"_"+color).innerHTML = item.quantity;
     document.getElementById("tableau-price-total_" +id+"_"+color).innerHTML= item.quantity * prix + "€";
     localStorage.setItem("panier", JSON.stringify(panier));
+    total += prix
+    prixTotal(total);
 }
 
 function deleteItem(id, color, prix, event) {
@@ -161,10 +186,11 @@ function deleteItem(id, color, prix, event) {
     console.log(item)
     console.log(panier, id, price)
     item.quantity -= 1;
-    if (item.quantity <= 0) {
-        item.quantity = 0;
+    if (item.quantity < 1) {
+        item.quantity = 1;
         let itemIndex = panier.indexOf(element => element.id === id && element.color === color);
         panier.splice(itemIndex, 1);
+        localStorage.setItem('panier',JSON.stringify(panier));
         event.target.parentNode.parentNode.parentNode.parentNode.innerHTML = "";
         displayCart(listeProduits);
     }
@@ -172,4 +198,6 @@ function deleteItem(id, color, prix, event) {
     document.getElementById("tableau-price-total_" + id+"_"+color).innerHTML= item.quantity * prix + "€";
     document.getElementById("teddy_" +id+"_"+color).innerHTML = item.quantity;
     localStorage.setItem("panier", JSON.stringify(panier));
+    total -= prix
+    prixTotal(total);
 }
