@@ -95,79 +95,180 @@ function addListeners(teddies) {
 
 function acheter(){
     document.getElementById("button").addEventListener("click", function(event){
-       let errorName = document.getElementById("errorName");
-       let errorNom = document.getElementById("errorNom");
-       let errorAdresse = document.getElementById("errorAdresse");
-       let errorVille = document.getElementById("errorVille");
-       let errorEmail = document.getElementById("errorEmail");
-       let verificationEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+       let error = document.getElementById("error");
         event.preventDefault();
-        var inputName = document.getElementById("name").value;
-        if(inputName == "") {
-            errorName.innerHTML = "le champs est vide"
-            errorName.setAttribute("class", "btn btn-danger")
-        }else {
-            errorName.innerHTML = ""
-            errorName.setAttribute("class", "")
-        }
-        var inputNom = document.getElementById("nom").value;
-        if(inputNom == "") {
-            errorNom.innerHTML = "le champs est vide"
-            errorNom.setAttribute("class", "btn btn-danger")
-        }else {
-            errorNom.innerHTML = ""
-            errorNom.setAttribute("class", "")
-        }
-        var inputAdresse = document.getElementById("adresse").value;
-        if(inputAdresse == "") {
-            errorAdresse.innerHTML = "le champs est vide"
-            errorAdresse.setAttribute("class", "btn btn-danger")
-        }else {
-            errorAdresse.innerHTML = ""
-            errorAdresse.setAttribute("class", "")
-        }
-        var inputVille = document.getElementById("ville").value;
-        if(inputVille == "") {
-            errorVille.innerHTML = "le champs est vide"
-            errorVille.setAttribute("class", "btn btn-danger")
-        }else {
-            errorVille.innerHTML = ""
-            errorVille.setAttribute("class", "")
-        }
-        var inputEmail = document.getElementById("email").value;
-        if(inputEmail == "") {
-            errorEmail.innerHTML = "le champs est vide"
-            errorEmail.setAttribute("class", "btn btn-danger")
-        }else if (inputEmail != verificationEmail) {
-            errorEmail.innerHTML = "Adresse e-mail non valide"
-            errorEmail.setAttribute("class", "btn btn-warning")
+        checkSubmit()
+
+        function checkSubmit() {
+            var inputName = document.getElementById("name");
+            var inputNom = document.getElementById("nom");
+            var inputAdresse = document.getElementById("adresse");
+            var inputVille = document.getElementById("ville");
+            var inputEmail = document.getElementById("email");
+
+            if(checkEmpty(inputName) && checkEmpty(inputNom) && checkEmpty(inputAdresse) && checkEmpty(inputVille) && checkEmpty(inputEmail) && checkEmail(inputEmail)) {
+                    let contact = {
+                        firstName: inputName,
+                        lastName: inputNom,
+                        address: inputAdresse,
+                        city: inputVille,
+                        email: inputEmail
+                    }
+                    localStorage.setItem("contact", JSON.stringify(contact));
+
+                    let products = panier.map(elt => elt.id);
+
+                    fetch('http://localhost:3000/api/teddies/order', {
+                        method: "POST",
+                        body: JSON.stringify({contact, products}),
+                        headers: {"Content-type": "application/json; charset=UTF-8"}
+                        })
+                        .then(response => response.json())
+                        .then(elt => {
+                            console.log(elt, "test")
+                            localStorage.setItem("toto", JSON.stringify(elt.orderId));
+                            window.location.replace("confirmation.html");
+                        }).catch(function(error) {
+                            console.log(error.response);
+                    });
+                    let button = document.getElementById("button");
+                    button.disabled = false;
+                }else {
+                    let button = document.getElementById("button");
+                    button.disabled = true;
+                }
         }
 
-        let contact = {
-                firstName: inputName,
-                lastName: inputNom,
-                address: inputAdresse,
-                city: inputVille,
-                email: inputEmail
+        checkForm()
+
+        function checkEmpty(input) {
+            if(input.value === "") {
+                error.textContent = `${input.name} est vide`;
+                error.setAttribute("class", "btn btn-danger")
+                return false
+            }else {
+                error.textContent = ``;
+                error.setAttribute("class", "")
+                return true
             }
-        localStorage.setItem("contact", JSON.stringify(contact));
-        
-        let products = panier.map(elt => elt.id);
+        }
 
-        fetch('http://localhost:3000/api/teddies/order', {
-            method: "POST",
-            body: JSON.stringify({contact, products}),
-            headers: {"Content-type": "application/json; charset=UTF-8"}
+        function checkEmail(input) {
+            let regex = /\S+@\S+\.\S+/;
+            if(!regex.test(input.value)) {
+                error.textContent = `le format de l'email n'est pas correct`;
+                return false
+            }else {
+                error.textContent = ``;
+                return true
+            }
+        }
+
+        function checkForm() {
+            document.getElementById("name").addEventListener('keyup', (e) => {
+                checkEmpty(e.target);
+                checkSubmit()
             })
-            .then(response => response.json())
-            .then(elt => {
-                console.log(elt, "test")
-                localStorage.setItem("toto", JSON.stringify(elt.orderId));
-                // window.location.replace("confirmation.html");
-            }).catch(function(error) {
-                console.log(error.response);
-        });
+            document.getElementById("nom").addEventListener('keyup', (e) => {
+                checkEmpty(e.target);
+                checkSubmit()
+            })
+            document.getElementById("adresse").addEventListener('keyup', (e) => {
+                checkEmpty(e.target);
+                checkSubmit()
+            })
+            document.getElementById("ville").addEventListener('keyup', (e) => {
+                checkEmpty(e.target);
+                checkSubmit()
+            })
+            document.getElementById("email").addEventListener('keyup', (e) => {
+                checkEmpty(e.target);
+                checkEmail(e.target);
+                checkSubmit()
+            })
+            document.getElementById("button").addEventListener('submit', (e) => {
+                e.preventDefault();
+                checkForm();
+            })
+        }
+        
     });
+
+
+        // let contact = {
+        //     firstName: inputName,
+        //     lastName: inputNom,
+        //     address: inputAdresse,
+        //     city: inputVille,
+        //     email: inputEmail
+        // }
+        // localStorage.setItem("contact", JSON.stringify(contact));
+
+        // let products = panier.map(elt => elt.id);
+
+        // fetch('http://localhost:3000/api/teddies/order', {
+        //     method: "POST",
+        //     body: JSON.stringify({contact, products}),
+        //     headers: {"Content-type": "application/json; charset=UTF-8"}
+        //     })
+        //     .then(response => response.json())
+        //     .then(elt => {
+        //         console.log(elt, "test")
+        //         localStorage.setItem("toto", JSON.stringify(elt.orderId));
+        //         window.location.replace("confirmation.html");
+        //     }).catch(function(error) {
+        //         console.log(error.response);
+        // });
+
+        
+        // else if (inputEmail != verificationEmail) {
+        //     errorEmail.innerHTML = "Adresse e-mail non valide"
+        //     errorEmail.setAttribute("class", "btn btn-warning")
+        // }else {
+        //     errorEmail.innerHTML = ""
+        //     errorEmail.setAttribute("class", "")
+        // }
+
+        // var inputName = document.getElementById("name").value;
+        // if(inputName == "") {
+        //     errorName.innerHTML = "le champs est vide"
+        //     errorName.setAttribute("class", "btn btn-danger")
+        // }else {
+        //     errorName.innerHTML = ""
+        //     errorName.setAttribute("class", "")
+        // }
+        // var inputNom = document.getElementById("nom").value;
+        // if(inputNom == "") {
+        //     errorNom.innerHTML = "le champs est vide"
+        //     errorNom.setAttribute("class", "btn btn-danger")
+        // }else {
+        //     errorNom.innerHTML = ""
+        //     errorNom.setAttribute("class", "")
+        // }
+        // var inputAdresse = document.getElementById("adresse").value;
+        // if(inputAdresse == "") {
+        //     errorAdresse.innerHTML = "le champs est vide"
+        //     errorAdresse.setAttribute("class", "btn btn-danger")
+        // }else {
+        //     errorAdresse.innerHTML = ""
+        //     errorAdresse.setAttribute("class", "")
+        // }
+        // var inputVille = document.getElementById("ville").value;
+        // if(inputVille == "") {
+        //     errorVille.innerHTML = "le champs est vide"
+        //     errorVille.setAttribute("class", "btn btn-danger")
+        // }else {
+        //     errorVille.innerHTML = ""
+        //     errorVille.setAttribute("class", "")
+        // }
+        // var inputEmail = document.getElementById("email").value;
+        // if(inputEmail == "") {
+        //     errorEmail.innerHTML = "le champs est vide"
+        //     errorEmail.setAttribute("class", "btn btn-danger")
+        // }else {
+        //     errorEmail.innerHTML = ""
+        //     errorEmail.setAttribute("class", "")
+        // }
 }
 
 function addItem(id, color, prix) {

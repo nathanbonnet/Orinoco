@@ -15,8 +15,8 @@
         </div>
     </header>
     <main class="d-flex flex-column align-items-center" id="tableau-produit">
-        <table id="tablePanier" class="d-flex flex-column align-items-center">
-            <tr class="d-flex">
+        <table id="tablePanier" class="d-flex flex-column">
+            <tr class="d-flex justify-content-center">
                 <th>Prenom</th>
                 <th class="pl-2">Couleur</th>
                 <th class="pl-2">Prix</th>
@@ -29,29 +29,25 @@
         <div class="d-flex flex-column align-items-center col-6">
             <div class="form-example d-flex flex-column">
                 <label for="name">Entez votre prenom: </label>
-                <input type="text" name="name" id="name" required>
-                <span id="errorName"></span>
+                <input type="text" name="prenom" id="name" required>
             </div>
             <div class="form-example d-flex flex-column">
                 <label for="nom">Entez votre nom: </label>
                 <input type="text" name="nom" id="nom" required>
-                <span id="errorNom"></span>
             </div>
             <div class="form-example d-flex flex-column">
                 <label for="adresse">Entez votre adresse: </label>
                 <input type="text" name="adresse" id="adresse" required>
-                <span id="errorAdresse"></span>
             </div>
             <div class="form-example d-flex flex-column">
                 <label for="ville">Entez votre ville: </label>
                 <input type="text" name="ville" id="ville" required>
-                <span id="errorVille"></span>
             </div>
             <div class="form-example d-flex flex-column">
                 <label for="email">Entez votre e-mail: </label>
                 <input type="email" name="email" id="email" required>
-                <span id="errorEmail"></span>
             </div>
+            <span id="error"></span>
             <div class="form-example">
                 <button type="submit" id="button" class="btn btn-primary mt-3 mb-3">Acheter</button>
             </div>
