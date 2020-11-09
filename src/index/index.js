@@ -17,8 +17,8 @@ fetch('http://localhost:3000/api/teddies/')
         console.log(data);
         affichageHome(data);
     }).catch(function(error) {
-        console.log(error);
-        bloc.innerHTML = '<h1 style="color:red">une erreur est survenue sur le serveur</h1>'
+        console.error(error);
+        bloc_article.innerHTML = '<h1 style="color:red">une erreur est survenue sur le serveur</h1>'
     })
 ;
 

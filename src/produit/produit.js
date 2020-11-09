@@ -75,6 +75,7 @@ function affichageProduit(response){
     ajouter()
 }
 
+
 function ajouter() {
     let lien = document.createElement("a");
     let button_ajout = document.createElement("button");
@@ -93,6 +94,7 @@ function ajouter() {
                 color: document.querySelector('#checkbox-colors input[name="colors"]:checked').value
             })
             localStorage.setItem("panier", JSON.stringify(panier));
+            console.log(panier)
             console.log(e);
         })
 }

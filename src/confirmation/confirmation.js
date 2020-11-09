@@ -12,4 +12,3 @@ let name = storageName ? storageName : [];
 
 let message = document.getElementById("message");
 message.innerHTML = "merci " + name.firstName +  " pour votre commande, le prix total est de : " +price+ "€ votre numero de commande est : " +panier;
-console.log(id);
